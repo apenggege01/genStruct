@@ -130,7 +130,7 @@ func (this *Generate) ReadCSV(readPath, savePath string) error {
 	this.FileNameSlice = make([]string, 0, 100)
 
 	var enc mahonia.Decoder
-	enc = mahonia.NewDecoder("gbk")
+	enc = mahonia.NewDecoder("utf8")
 	files, err := ioutil.ReadDir(readPath)
 	if err != nil {
 		return fmt.Errorf("ReadExcel|ReadDir is err:%v", err)
@@ -346,7 +346,7 @@ func (this *Generate) SplicingData(data [][]string, structName string) error {
 
 	structData += fmt.Sprintf(InitEnd)
 
-	//提取字典数据方法
+	// 提取字典数据方法
 	structData += fmt.Sprintf(FormateChangeRow)
 	structData += fmt.Sprintf(GetBegin, firstRuneToUpper(structName), firstRuneToUpper(structName), firstRuneToUpper(structName))
 	structData += fmt.Sprintf(GetDoGet)
