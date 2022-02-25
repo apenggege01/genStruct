@@ -276,7 +276,7 @@ func (this *Generate) GenCommFile() error {
 	structData += fmt.Sprintf(ReloadConst14)
 	structData += fmt.Sprintf(ReloadConst15)
 
-	err := this.WriteNewFile(structData, "ConfigManager.go")
+	err := this.WriteNewFile(structData, "configManager.go")
 	if err != nil {
 		return err
 	}
