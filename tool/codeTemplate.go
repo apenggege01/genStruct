@@ -41,7 +41,7 @@ const(
 )
 
 // 管理对象结构
-var (
+const (
 	DicBegin          = "type %sDic struct {\n"          // 结构体开始
 	DicValue          = "\tTableName string\n"         // 表名字
 	DicValueForServer = "\tMapRowsData map[int] *%s\n" // 解析出来的字典
@@ -50,37 +50,38 @@ var (
 )
 
 // 初始化方法
-var (
+const (
 	InitStructDicMgr = "var %s"
 	InitBegin        = "func (this *%sDic)Init%sDic(){\n"           // 初始化函数开始
 	InitFilePath     = "\tthis.TableName = \"%s.csv\"\n"          // 表名
-	InitMapRows      = "\tthis.MapRowsData = make(map[int]*%s)\n" // 提取字典数据
+	TempMapRows      = "\tmapRowsData := make(map[int]*%s)\n" // 提取字典数据
 
 	readCsv     = "\tcsv, err := NewWithOpts(this.TableName, %s{}, Comma(','), LazyQuotes(true), SkipLine(4))\n"
-	readCsvRet  = "\t\tif err != nil {\n"
-	readCsvRet1 = "\t\t\n"
-	readCsvRet2 = "\t\t\treturn\n"
-	readCsvRet3 = "\t\t}\n"
+	readCsvRet  = "\tif err != nil {\n"
+	readCsvRet1 = "\t\tthis.MapRowsData = make(map[int]*%s)\n" // 提取字典数据
+	readCsvRet2 = "\t\treturn\n"
+	readCsvRet3 = "\t}\n"
 
 	readCsvRet4  = "\tfor i := 0; i < csv.LineLen; i++ {\n"
-	readCsvRet5  = "\t\ttt := &%s{}\n"
-	readCsvRet6  = "\t\terr = csv.Parse(tt)\n"
+	readCsvRet5  = "\t\ttemp := &%s{}\n"
+	readCsvRet6  = "\t\terr = csv.Parse(temp)\n"
 	readCsvRet7  = "\t\tif err != nil {\n"
 	readCsvRet8  = "\t\t\tbreak\n"
 	readCsvRet9  = "\t\t}\n"
-	readCsvRet10 = "\t\tthis.MapRowsData[tt.Id] = tt\n"
+	readCsvRet10 = "\t\tmapRowsData[temp.Id] = temp\n"
 	readCsvRet11 = "\t}\n"
+	readCsvRet12 = "\tthis.MapRowsData  = mapRowsData\n"
 
 	//这块是解析函数
-	InitEnd = "\n}\n" //初始化完成
+	InitEnd = "}\n" //初始化完成
 )
 
 // 初始化方法
-var (
+const (
 	GetBegin     = "func (this *%sDic) Get%sCfgByID(id int) (*%s, string) {\n" // 查询函数开始
 	GetDoGet     = "    cfg, isok := this.MapRowsData[id]\n"                   // 提取字典数据
 	GetIsOK      = "    if !isok {\n"                                          // 判断是否提取成功
-	GetRetErrVal = "			return nil, \"ErrRowNotExist\"\n"                       // 返回错误
+	GetRetErrVal = "		return nil, \"ErrRowNotExist\"\n"                       // 返回错误
 	GetEnd       = "	}\n"                                                      //提取完成
 	GetRetVal    = "	return cfg, \"\"\n"                                       // 返回错误
 	GetFuncEnd   = "}\n"
@@ -98,17 +99,52 @@ var (
 //	this.TransferCfg.InitTransferDic()
 //
 //}
+//
+//func (this *ConfigManager)ReloadConfig(fileNameList []string) []string {
+//	erroFileList := make([]string, 0)
+//	if fileNameList == nil || len(fileNameList) <= 0{
+//		return erroFileList
+//	}
+//	for _,fileName := range fileNameList{
+//		switch fileName {
+//			case %s :
+//				this.%sCfg.Init%sDic()
+//			default:
+//				erroFileList = append(erroFileList, fileName)
+//  	}
+//	}
+//  return erroFileList
+//}
+
 
 // 公共管理代码生成
-var (
-	Comm1     = "type ConfigManager struct {\n" // 公共管理代码生成
-	Comm2     = "\t%sCfg %sDic\n" // 管理结构定义
-	Comm3     = "}\n" // 公共管理代码生成
+const (
+	ConfigManager1     = "type ConfigManager struct {\n" // 公共管理代码生成
+	ConfigManager2     = "\t%sCfg %sDic\n" // 管理结构定义
+	ConfigManager3     = "}\n" // 公共管理代码生成
 
-	Comm4     = "func (this *ConfigManager)InitAllConfig(csvRoot string){\n" // 公共管理代码生成
-	Comm5     = "\tSetCSVPath(csvRoot)\n" // 公共管理代码生成
-	Comm6     = "\tthis.%sCfg.Init%sDic()\n" // 公共管理代码生成
-	Comm7     = "}\n" // 公共管理代码生成
+	Init1     = "func (this *ConfigManager)InitAllConfig(csvRoot string){\n" // 公共管理代码生成
+	Init2     = "\tSetCSVPath(csvRoot)\n" // 公共管理代码生成
+	Init3     = "\tthis.%sCfg.Init%sDic()\n" // 公共管理代码生成
+	Init4     = "}\n" // 公共管理代码生成
+)
+
+const(
+	ReloadConst1 = "func (this *ConfigManager)ReloadConfig(fileNameList []string) []string {\n"
+	ReloadConst2 = "\terroFileList := make([]string, 0)\n"
+	ReloadConst3 = "\tif fileNameList == nil || len(fileNameList) <= 0{\n"
+	ReloadConst4 = 	"\t\treturn erroFileList\n"
+	ReloadConst5 = 	"\t}\n"
+	ReloadConst6 = 	"\tfor _,fileName := range fileNameList{\n"
+	ReloadConst7 = 	"\t\tswitch fileName {\n"
+	ReloadConst8 = 	"\t\t\tcase \"%s\" :\n"
+	ReloadConst9 = 	"\t\t\t\tthis.%sCfg.Init%sDic()\n"
+	ReloadConst10 = "\t\t\tdefault:\n"
+	ReloadConst11 = "\t\t\t\terroFileList = append(erroFileList, fileName)\n"
+	ReloadConst12 = "\t\t}\n"
+	ReloadConst13 = "\t}\n"
+	ReloadConst14 = "\treturn erroFileList\n"
+	ReloadConst15 = "}\n"
 )
 
 type Generate struct {
@@ -122,7 +158,7 @@ func GetFileNameByFullName(fileName string) string {
 }
 
 // 读取 csv 文件
-func (this *Generate) ReadCSV(readPath, savePath string) error {
+func (this *Generate) GenerateStruct(readPath, savePath string) error {
 	if savePath == "" {
 		return fmt.Errorf("ReadExcel|savePath is nil")
 	}
@@ -204,21 +240,43 @@ func (this *Generate) GenCommFile() error {
 
 	structData := ""
 	//生成表解析函数和获取函数
-	structData += fmt.Sprintf(Comm1)
+	structData += fmt.Sprintf(ConfigManager1)
 	for _, structName := range this.FileNameSlice {
-		structData += fmt.Sprintf(Comm2, firstRuneToUpper(structName), firstRuneToUpper(structName))
+		structData += fmt.Sprintf(ConfigManager2, firstRuneToUpper(structName), firstRuneToUpper(structName))
 	}
-	structData += fmt.Sprintf(Comm3)
+	structData += fmt.Sprintf(ConfigManager3)
 
-	structData += fmt.Sprintf(Comm4)
-	structData += fmt.Sprintf(Comm5)
+	structData += fmt.Sprintf(FormateChangeRow)
+	structData += fmt.Sprintf(Init1)
+	structData += fmt.Sprintf(Init2)
 
 	for _, structName := range this.FileNameSlice {
-		structData += fmt.Sprintf(Comm6, firstRuneToUpper(structName), firstRuneToUpper(structName))
+		structData += fmt.Sprintf(Init3, firstRuneToUpper(structName), firstRuneToUpper(structName))
 	}
-	structData += fmt.Sprintf(Comm7)
+	structData += fmt.Sprintf(Init4)
 
-	err := this.WriteNewFile(structData, "configManager.go")
+
+	// 热更新调用
+	structData += fmt.Sprintf(FormateChangeRow)
+	structData += fmt.Sprintf(ReloadConst1)
+	structData += fmt.Sprintf(ReloadConst2)
+	structData += fmt.Sprintf(ReloadConst3)
+	structData += fmt.Sprintf(ReloadConst4)
+	structData += fmt.Sprintf(ReloadConst5)
+	structData += fmt.Sprintf(ReloadConst6)
+	structData += fmt.Sprintf(ReloadConst7)
+	for _, structName := range this.FileNameSlice {
+		structData += fmt.Sprintf(ReloadConst8, structName)
+		structData += fmt.Sprintf(ReloadConst9, firstRuneToUpper(structName), firstRuneToUpper(structName))
+	}
+	structData += fmt.Sprintf(ReloadConst10)
+	structData += fmt.Sprintf(ReloadConst11)
+	structData += fmt.Sprintf(ReloadConst12)
+	structData += fmt.Sprintf(ReloadConst13)
+	structData += fmt.Sprintf(ReloadConst14)
+	structData += fmt.Sprintf(ReloadConst15)
+
+	err := this.WriteNewFile(structData, "ConfigManager.go")
 	if err != nil {
 		return err
 	}
@@ -328,11 +386,11 @@ func (this *Generate) SplicingData(data [][]string, structName string) error {
 	structData += fmt.Sprintf(FormateChangeRow)
 	structData += fmt.Sprintf(InitBegin, firstRuneToUpper(structName), firstRuneToUpper(structName))
 	structData += fmt.Sprintf(InitFilePath, structName)
-	structData += fmt.Sprintf(InitMapRows, firstRuneToUpper(structName))
+	structData += fmt.Sprintf(TempMapRows, firstRuneToUpper(structName))
 
 	structData += fmt.Sprintf(readCsv, firstRuneToUpper(structName))
 	structData += fmt.Sprintf(readCsvRet)
-	structData += fmt.Sprintf(readCsvRet1)
+	structData += fmt.Sprintf(readCsvRet1, firstRuneToUpper(structName))
 	structData += fmt.Sprintf(readCsvRet2)
 	structData += fmt.Sprintf(readCsvRet3)
 	structData += fmt.Sprintf(readCsvRet4)
@@ -343,6 +401,7 @@ func (this *Generate) SplicingData(data [][]string, structName string) error {
 	structData += fmt.Sprintf(readCsvRet9)
 	structData += fmt.Sprintf(readCsvRet10)
 	structData += fmt.Sprintf(readCsvRet11)
+	structData += fmt.Sprintf(readCsvRet12)
 
 	structData += fmt.Sprintf(InitEnd)
 

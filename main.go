@@ -25,7 +25,7 @@ func main() {
 		return
 	}
 	gt := tool.Generate{}
-	err := gt.ReadCSV(*readPath, *savePath)
+	err := gt.GenerateStruct(*readPath, *savePath)
 
 	if err != nil {
 		fmt.Printf("something err:%v\n", err)
