@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"unicode"
 )
@@ -477,13 +478,13 @@ func (this *Generate) SplicingData(primeKeyType string, data [][]string, structN
 
 // 拼装好的struct写入新的文件
 func (this *Generate) WriteNewFile(data string, fileName string) error {
-	str := strings.Split(this.savePath, "\\")
+	/*str := strings.Split(this.savePath, "\\")
 	if len(str) == 0 {
 		return fmt.Errorf("WriteNewFile|len(str) is 0")
-	}
+	}*/
 	//header = fmt.Sprintf(header, str[len(str)-1])
 	data = header + data
-	fw, err := os.OpenFile(this.savePath+"\\"+fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	fw, err := os.OpenFile(filepath.Join(this.savePath,fileName), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return fmt.Errorf("WriteNewFile|OpenFile is err:%v", err)
 	}
