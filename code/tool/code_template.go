@@ -197,11 +197,11 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 		if path.Ext(fileInfo.Name()) != ".csv" || hasChineseOrDefault(fileInfo.Name()) {
 			continue
 		}
-
 		filePath := readPath + "\\" + fileInfo.Name()
+		filePath = path.Dir(filePath)
 		file, openErr := os.Open(filePath)
 		if openErr != nil {
-			return fmt.Errorf("error %v  open file %s", openErr, readPath+"\\"+fileInfo.Name())
+			return fmt.Errorf("\nerror %v  open file %s", openErr, filePath)
 		}
 		defer file.Close()
 
