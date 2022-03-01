@@ -24,6 +24,8 @@ func main() {
 		fmt.Println("savePath, readPath or allType is nil")
 		return
 	}
+	fmt.Printf("savePath is :%s readPath is :%s", *savePath, *readPath)
+
 	gt := tool.Generate{}
 	err := gt.GenerateStruct(*readPath, *savePath)
 
