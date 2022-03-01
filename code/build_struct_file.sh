@@ -1,6 +1,8 @@
 #!/bin/bash
-
-./go_build_genStruct -savePath="./../config-data" -readPath="./../csv"
-set pathStr=%~dp0
+rm -rf ../config-data
+mkdir ../config-data
+go build
+chmod +x ./code
+./code -savePath="./../config-data" -readPath="./../csv"
 gofmt -s -w  "../config-data/"
 
