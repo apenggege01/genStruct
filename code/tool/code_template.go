@@ -201,7 +201,7 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 		filePath := readPath + "\\" + fileInfo.Name()
 		file, openErr := os.Open(filePath)
 		if openErr != nil {
-			return fmt.Errorf("error %v  open file %s", openErr, readPath+"\\"+file.Name())
+			return fmt.Errorf("error %v  open file %s", openErr, readPath+"\\"+fileInfo.Name())
 		}
 		defer file.Close()
 
