@@ -1,7 +1,6 @@
-Int,Int32,Int64,Int32Array,String,StringArray,Float32SArray,Float32,Int,Int
-显示顺序1,徽章编号,可镶嵌符文类型类型,满星回收奖励,描述,各个等级说明,徽章升阶上限,自己给自己加血修正（百分比）,别人给自己加血修正（百分比）,我给别人加血修正（百分比）
 id,badgeId,runeType,recycleReward,skillId,lvInfo,lightMax,addHp,beAddHp,toAddHp
-all,all,all,all,all,all,all,all,s,c
+显示顺序1,徽章编号,可镶嵌符文类型类型,满星回收奖励,描述,各个等级说明,徽章升阶上限,自己给自己加血修正（百分比）,别人给自己加血修正（百分比）,我给别人加血修正（百分比）
+Int32,Int32,Int64,Int32Array,String,StringArray,Float32SArray,Float32,Int,Int
 1,50100,1,40000|20,简单的徽章,一级徽章|二级徽章,10.5|20.0|30,90.23,50,50
 0,50101,2,40001|20,困难的徽章,一级徽章|二级徽章,10.5|20.0|30,75.5,100,100
 2,50102,3,40002|20,恐怖的徽章,一级徽章|二级徽章,10.5|20.0|30,95.68,75,100

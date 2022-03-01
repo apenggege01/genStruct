@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"genStruct/tool"
+	"genStruct/code/tool"
 )
 
 var (
@@ -13,7 +13,7 @@ var (
 
 func doWhile(step string) {
 
-	for{
+	for {
 		fmt.Println("savePath, readPath or allType is nil step:" + step)
 	}
 }

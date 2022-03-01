@@ -1,7 +1,6 @@
-Int,Int,Int,IntArray,Int,Int,Int,Int,Int,Int
-显示顺序1,徽章编号,可镶嵌符文类型类型,满星回收,普攻，对应skill,符文等级上限,徽章升阶上限,自己给自己加血修正（百分比）,别人给自己加血修正（百分比）,我给别人加血修正（百分比）
 id,badgeId,runeType,recycleReward,skillId,runeMax,lightMax,addHp,beAddHp,toAddHp
-all,all,all,all,all,all,all,all,s,c
+显示顺序1,徽章编号,可镶嵌符文类型类型,满星回收,普攻，对应skill,符文等级上限,徽章升阶上限,自己给自己加血修正（百分比）,别人给自己加血修正（百分比）,我给别人加血修正（百分比）
+String,Int,Int,IntArray,Int,Int,Int,Int,Int,Int
 1,50100,1,40000|20,1002,50,40,90,50,50
 0,50101,2,40001|20,1001,50,40,75,100,100
 2,50102,3,40002|20,1003,50,40,95,75,100

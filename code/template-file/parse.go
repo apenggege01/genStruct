@@ -123,7 +123,7 @@ func convertBool(value string) reflect.Value {
 
 func convertBools(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertBool(values[i])
 	}
 	ret := reflect.MakeSlice(boolSliceType, 0, 0)
@@ -139,7 +139,7 @@ func convertFloat32(value string) reflect.Value {
 
 func convertFloat32s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertFloat32(values[i])
 	}
 	ret := reflect.MakeSlice(float32SliceType, 0, 0)
@@ -155,7 +155,7 @@ func convertFloat64(value string) reflect.Value {
 
 func convertFloat64s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertFloat64(values[i])
 	}
 	ret := reflect.MakeSlice(float64SliceType, 0, 0)
@@ -171,7 +171,7 @@ func convertInt(value string) reflect.Value {
 
 func convertInts(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertInt(values[i])
 	}
 	ret := reflect.MakeSlice(intSliceType, 0, 0)
@@ -187,7 +187,7 @@ func convertInt8(value string) reflect.Value {
 
 func convertInt8s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertInt8(values[i])
 	}
 	ret := reflect.MakeSlice(int8SliceType, 0, 0)
@@ -203,7 +203,7 @@ func convertInt16(value string) reflect.Value {
 
 func convertInt16s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertInt16(values[i])
 	}
 	ret := reflect.MakeSlice(int16SliceType, 0, 0)
@@ -219,7 +219,7 @@ func convertInt32(value string) reflect.Value {
 
 func convertInt32s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertInt32(values[i])
 	}
 	ret := reflect.MakeSlice(int32SliceType, 0, 0)
@@ -235,7 +235,7 @@ func convertInt64(value string) reflect.Value {
 
 func convertInt64s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertInt64(values[i])
 	}
 	ret := reflect.MakeSlice(int64SliceType, 0, 0)
@@ -248,7 +248,7 @@ func convertString(value string) reflect.Value {
 
 func convertStrings(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertString(values[i])
 	}
 	ret := reflect.MakeSlice(stringSliceType, 0, 0)
@@ -264,7 +264,7 @@ func convertUint(value string) reflect.Value {
 
 func convertUInts(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertUint(values[i])
 	}
 	ret := reflect.MakeSlice(uintSliceType, 0, 0)
@@ -279,7 +279,7 @@ func convertUint8(value string) reflect.Value {
 }
 func convertUint8s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertUint8(values[i])
 	}
 	ret := reflect.MakeSlice(uint8SliceType, 0, 0)
@@ -295,7 +295,7 @@ func convertUint16(value string) reflect.Value {
 
 func convertUint16s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertUint16(values[i])
 	}
 	ret := reflect.MakeSlice(uint16SliceType, 0, 0)
@@ -311,7 +311,7 @@ func convertUint32(value string) reflect.Value {
 
 func convertUint32s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertUint32(values[i])
 	}
 	ret := reflect.MakeSlice(uint32SliceType, 0, 0)
@@ -327,7 +327,7 @@ func convertUint64(value string) reflect.Value {
 
 func convertUint64s(values []string) reflect.Value {
 	items := make([]reflect.Value, len(values))
-	for i, _ := range values {
+	for i := range values {
 		items[i] = convertUint64(values[i])
 	}
 	ret := reflect.MakeSlice(uint64SliceType, 0, 0)
@@ -358,7 +358,7 @@ func Comma(r rune) func(*Option)      { return func(opt *Option) { opt.Comma = r
 func LazyQuotes(b bool) func(*Option) { return func(opt *Option) { opt.LazyQuotes = b } }
 func SkipLine(l int) func(*Option)    { return func(opt *Option) { opt.SkipLine = l } }
 
-func SetCSVPath(csvRoot string){
+func SetCSVPath(csvRoot string) {
 	FileRoot = csvRoot
 }
 
@@ -425,7 +425,7 @@ Out:
 		}
 		fd := &FieldDefine{f, 0}
 		index := -1
-		for j, _ := range fields {
+		for j := range fields {
 			if fields[j] == fieldName {
 				index = j
 				break
@@ -467,7 +467,7 @@ func (this *Csv4g) Parse(obj interface{}) (err error) {
 	}()
 	values := this.lines[this.lineNo]
 	elem := reflect.ValueOf(obj).Elem()
-	for index, _ := range this.fields {
+	for index := range this.fields {
 		f := elem.FieldByIndex(this.fields[index].Index)
 		value := values[this.fields[index].FieldIndex]
 		if conv, ok := converters[f.Kind()]; ok {
