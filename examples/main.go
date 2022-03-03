@@ -15,14 +15,7 @@ func main() {
 		fmt.Errorf("InitAllConfig err :\"%v ", errList)
 	}
 
-	//  获取某个 csv 配置的使用示例，例如 transger 表，查询 id 为1的字段
-	transferCfgData, err := configManager.TransferCfg.GetTransferCfgByID(int32(1))
-	if err != nil {
-		fmt.Errorf("get transfer data err :\"%v", err)
-		return
-	}
-	fmt.Errorf("transfer data is :\"%v", transferCfgData.RecycleReward)
-
+	//  获取某个 csv 配置的使用示例，例如 test1 表，查询 id 为 "1" 的字段
 	test1CfgData, err := configManager.Test1Cfg.GetTest1CfgByID("1")
 	if err != nil {
 		fmt.Errorf("get test1Cfg data err :\"%v", err)
@@ -32,10 +25,18 @@ func main() {
 
 	test2CfgData, err := configManager.Test2Cfg.GetTest2CfgByID(float32(1))
 	if err != nil {
-		fmt.Errorf("get test1Cfg data err :\"%v", err)
+		fmt.Errorf("get test2Cfg data err :\"%v", err)
 		return
 	}
-	fmt.Errorf("test1Cfg data is :\"%v", test2CfgData.RecycleReward)
+	fmt.Errorf("test2Cfg data is :\"%v", test2CfgData.RecycleReward)
+
+	Test3Cfg, err := configManager.Test3Cfg.GetTest3CfgByID(int32(1))
+	if err != nil {
+		fmt.Errorf("get test3Cfg data err :\"%v", err)
+		return
+	}
+	fmt.Errorf("test3Cfg data is :\"%v", Test3Cfg.RecycleReward)
+
 
 	// 热更新接口调用示例
 	fileNameList := make([]string, 0)
