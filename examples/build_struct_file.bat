@@ -1,7 +1,6 @@
 echo "start generate code!"
 mkdir ".\config-data"
-go build
-code.exe -savePath="./config-data" -readPath="./csv"
+code.exe -configDataPath="./config-data" -csvPath="./csv"
 set pathStr=%~dp0
 gofmt -s -w  "%pathStr%config-data\."
 pause

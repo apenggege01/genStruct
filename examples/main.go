@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"genStruct/examples/config-data"
+	"github.com/apenggege01/genStruct/examples/config-data"
 )
 
 func main() {
@@ -10,7 +10,7 @@ func main() {
 	// 引入生成的 configData 包
 	var configManager configData.ConfigManager
 	// 指定 csv 的路径
-	errList := configManager.InitAllConfig("../csv/")
+	errList := configManager.InitAllConfig("./csv/")
 	if errList!= nil && len(errList) > 0 {
 		fmt.Errorf("InitAllConfig err :\"%v ", errList)
 	}

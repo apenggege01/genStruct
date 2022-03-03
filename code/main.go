@@ -3,31 +3,24 @@ package main
 import (
 	"flag"
 	"fmt"
-	"genStruct/code/tool"
+	"github.com/apenggege01/genStruct/code/tool"
 )
 
 var (
-	savePath = flag.String("savePath", "", "Path to save the makefile")
-	readPath = flag.String("readPath", "", "The path of reading Excel")
+	configDataPath = flag.String("configDataPath", "", "Path to save the makefile")
+	csvPath = flag.String("csvPath", "", "The path of reading Excel")
 )
-
-func doWhile(step string) {
-
-	for {
-		fmt.Println("savePath, readPath or allType is nil step:" + step)
-	}
-}
 
 func main() {
 	flag.Parse()
-	if *savePath == "" || *readPath == "" {
-		fmt.Println("savePath, readPath or allType is nil")
+	if *configDataPath == "" || *csvPath == "" {
+		fmt.Println("configDataPath, csvPath or allType is nil")
 		return
 	}
-	fmt.Printf("savePath is :%s readPath is :%s", *savePath, *readPath)
+	fmt.Printf("configDataPath is :%s csvPath is :%s", *configDataPath, *csvPath)
 
 	gt := tool.Generate{}
-	err := gt.GenerateStruct(*readPath, *savePath)
+	err := gt.GenerateStruct(*csvPath, *configDataPath)
 
 	if err != nil {
 		fmt.Printf("something err:%v\n", err)

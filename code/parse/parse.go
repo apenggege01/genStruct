@@ -1,4 +1,4 @@
-package configData
+package parse
 
 import (
 	"encoding/csv"

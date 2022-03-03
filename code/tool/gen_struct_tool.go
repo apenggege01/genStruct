@@ -3,8 +3,7 @@ package tool
 import (
 	"encoding/csv"
 	"fmt"
-	configData "github.com/apenggege01/genStruct"
-	"github.com/axgle/mahonia"
+	configData "github.com/apenggege01/genStruct/code/parse"
 	"github.com/saintfish/chardet"
 	"io"
 	"io/ioutil"
@@ -17,7 +16,7 @@ import (
 )
 
 const (
-	TemplteFileName       = "template-file"
+	ParseFileName       = "parse"
 	ConfigManagerFileName = "config_manager.go"
 )
 
@@ -36,10 +35,12 @@ const (
 	lineNumber       = 3 // 每个工作表需要读取的行数
 )
 
-var genConfigManagerTmplate = `
-package configData
+var genConfigManagerTmplate = `package configData
 
-import "errors"
+import (
+	"errors"
+	parse "github.com/apenggege01/genStruct/code/parse"
+)
 
 type ConfigManager struct {
 	{{range .CapitalStructNameDic}}  {{end}}
@@ -49,7 +50,7 @@ type ConfigManager struct {
 
 func (this *ConfigManager)InitAllConfig(csvRoot string) []error{
 	errList := make([]error, 0)
-	SetCSVPath(csvRoot)
+	parse.SetCSVPath(csvRoot)
 	
 	var err error
 	{{range .CapitalStructNameDic}}  {{end}}
@@ -83,11 +84,13 @@ func (this *ConfigManager)ReloadConfig(fileNameList []string) []error {
 	return erroList
 }`
 
-var genStructTmplate = `
-package configData
+var genStructTmplate = `package configData
 
-import "errors"
-import "fmt"
+import( 
+	"errors"
+	"fmt"
+	parse "github.com/apenggege01/genStruct/code/parse"
+)
 
 type {{.CapitalStructName}} struct {
 	{{range .FileInfoList}}  {{end}}
@@ -103,7 +106,8 @@ type {{.CapitalStructName}}Dic struct {
 func (this *{{.CapitalStructName}}Dic)Init{{.CapitalStructName}}Dic()(error){
 	this.TableName = "{{.LowStructName}}.csv"
 	mapRowsData := make(map[{{.PrimeKeyType}}]{{.CapitalStructName}}, 0)
-	csv, err := NewWithOpts(this.TableName, {{.CapitalStructName}}{}, Comma(','), LazyQuotes(true), SkipLine(4))
+	csv, err := parse.NewWithOpts(this.TableName, {{.CapitalStructName}}{}, parse.Comma(','), 
+	parse.LazyQuotes(true), parse.SkipLine(4))
 	if err != nil {
 		this.MapRowsData = make(map[{{.PrimeKeyType}}]{{.CapitalStructName}}, 0)
 		return err
@@ -169,8 +173,6 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 	this.savePath = savePath
 	this.FileNameSlice = make([]string, 0, 100)
 
-	var enc mahonia.Decoder
-	enc = mahonia.NewDecoder("UTF-8")
 	files, err := ioutil.ReadDir(readPath)
 	if err != nil {
 		return fmt.Errorf("ReadExcel|ReadDir is err:%v", err)
@@ -217,7 +219,7 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 		for line = 0; line < len(sheetData[TablelineType]); line++ {
 			cellData := make([]string, lineNumber, lineNumber)
 			cellData[TablelineKey] = sheetData[TablelineKey][line]
-			cellData[TablelineComment] = enc.ConvertString(sheetData[TablelineComment][line])
+			cellData[TablelineComment] = sheetData[TablelineComment][line]
 			cellData[TablelineType] = sheetData[TablelineType][line]
 			//cellData[TablelineExpTyp] = sheetData[TablelineExpTyp][line]
 			CellDatas = append(CellDatas, cellData)
@@ -268,64 +270,6 @@ func (this *Generate) GenCommFile() error {
 	return nil
 }
 
-// 读取excel
-//func (this *Generate) ReadExcel(readPath, savePath string) error {
-//	if savePath == "" {
-//		return fmt.Errorf("ReadExcel|savePath is nil")
-//	}
-//	this.savePath = savePath
-//	files, err := ioutil.ReadDir(readPath)
-//	if err != nil {
-//		return fmt.Errorf("ReadExcel|ReadDir is err:%v", err)
-//	}
-//	for _, file := range files {
-//		if path.Ext(file.Name()) != ".csv" || hasChineseOrDefault(file.Name()) {
-//			continue
-//		}
-//		filePath := readPath + "\\" + file.Name()
-//		wb, err := xlsx.OpenFile(filePath)
-//		if err != nil {
-//			return fmt.Errorf("ReadExcel|xlsx.OpenFile is err :%v", err)
-//		}
-//		// 遍历工作表
-//		for _, sheet := range wb.Sheets {
-//			if hasChineseOrDefault(sheet.Name) {
-//				continue
-//			}
-//			sheetData := make([][]string, 0)
-//			// 判断表格中内容的行数是否小于需要读取的行数
-//			if sheet.MaxRow < lineNumber {
-//				return fmt.Errorf("ReadExcel|sheet.MaxRow:%d < lineNumber:%d", sheet.MaxRow, lineNumber)
-//			}
-//			// 遍历列
-//			for i := 0; i < sheet.MaxCol; i++ {
-//				// 判断某一列的第一行是否为空
-//				if sheet.Cell(0, i).Value == "" {
-//					continue
-//				}
-//				cellData := make([]string, 0)
-//				// 遍历行
-//				for j := 0; j < lineNumber; j++ {
-//					cellData = append(cellData, sheet.Cell(j, i).Value)
-//				}
-//				sheetData = append(sheetData, cellData)
-//			}
-//			err := this.SplicingData(sheetData, sheet.Name)
-//			if err != nil {
-//				return fmt.Errorf("fileName:\"%v\" is err:%v", file.Name(), err)
-//			}
-//		}
-//	}
-//	if this.data == "" {
-//		return fmt.Errorf("ReadExcel|this.data is nil")
-//	}
-//	//err = this.WriteNewFile(this.data)
-//	//if err != nil {
-//	//	return err
-//	//}
-//	return nil
-//}
-
 // 拼装 struct
 func (this *Generate) SplicingData(primeKeyType string, data [][]string, structName string) error {
 	fileInfoList := make([]string, 0)
@@ -346,13 +290,13 @@ func (this *Generate) SplicingData(primeKeyType string, data [][]string, structN
 
 // 复制模板文件到生成路径
 func (this *Generate) CopytemplateFile() error {
-	files, err := ioutil.ReadDir(filepath.Join(TemplteFileName))
+	files, err := ioutil.ReadDir(filepath.Join(ParseFileName))
 	if err != nil {
 		return fmt.Errorf("ReadExcel|ReadDir is err:%v", err)
 	}
 	for _, fileInfo := range files {
 		fileName := fileInfo.Name()
-		filePath := filepath.Join("./",TemplteFileName, fileName)
+		filePath := filepath.Join("./",ParseFileName, fileName)
 		source, openErr := os.Open(filePath)
 		if openErr != nil {
 			return fmt.Errorf("%s open file error %v", filePath, openErr)
