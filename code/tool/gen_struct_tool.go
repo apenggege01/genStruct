@@ -3,8 +3,9 @@ package tool
 import (
 	"encoding/csv"
 	"fmt"
-	configData "genStruct/code/template-file"
+	configData "github.com/apenggege01/genStruct"
 	"github.com/axgle/mahonia"
+	"github.com/saintfish/chardet"
 	"io"
 	"io/ioutil"
 	"os"
@@ -169,7 +170,7 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 	this.FileNameSlice = make([]string, 0, 100)
 
 	var enc mahonia.Decoder
-	enc = mahonia.NewDecoder("utf8")
+	enc = mahonia.NewDecoder("UTF-8")
 	files, err := ioutil.ReadDir(readPath)
 	if err != nil {
 		return fmt.Errorf("ReadExcel|ReadDir is err:%v", err)
@@ -219,8 +220,17 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 			cellData[TablelineComment] = enc.ConvertString(sheetData[TablelineComment][line])
 			cellData[TablelineType] = sheetData[TablelineType][line]
 			//cellData[TablelineExpTyp] = sheetData[TablelineExpTyp][line]
-
 			CellDatas = append(CellDatas, cellData)
+
+			detector := chardet.NewTextDetector()
+			result, err := detector.DetectBest([]byte(sheetData[TablelineComment][line]))
+			if err == nil {
+				if err == nil {
+					if result.Charset != "UTF-8"{
+						return fmt.Errorf("ReadCSV %s language is %s", file.Name(), result.Language)
+					}
+				}
+			}
 		}
 
 		err := this.SplicingData(configData.GetTypeName(sheetData[TablelineType][0]), CellDatas,
@@ -231,10 +241,10 @@ func (this *Generate) GenerateStruct(readPath, savePath string) error {
 		this.FileNameSlice = append(this.FileNameSlice, GetFileNameByFullName(fileInfo.Name()))
 	}
 
-	//生成公共加载文件
+	// 生成配置管理文件
 	this.GenCommFile()
-	//拷贝模板
-	this.CopytemplateFile()
+	// 拷贝解析模板
+	//this.CopytemplateFile()
 	return nil
 }
 
@@ -342,14 +352,14 @@ func (this *Generate) CopytemplateFile() error {
 	}
 	for _, fileInfo := range files {
 		fileName := fileInfo.Name()
-		filePath := "./" + TemplteFileName + "/" + fileName
+		filePath := filepath.Join("./",TemplteFileName, fileName)
 		source, openErr := os.Open(filePath)
 		if openErr != nil {
 			return fmt.Errorf("%s open file error %v", filePath, openErr)
 		}
 		defer source.Close()
 
-		destination, err := os.OpenFile(this.savePath+"\\"+fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+		destination, err := os.OpenFile(filepath.Join(this.savePath, fileName), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
 			return fmt.Errorf("WriteNewFile|OpenFile is err:%v", err)
 		}

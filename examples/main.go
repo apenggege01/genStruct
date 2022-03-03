@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"genStruct/config-data"
+	"genStruct/examples/config-data"
 )
 
 func main() {
